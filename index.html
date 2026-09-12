@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#FFD700">
+<link rel="manifest" href="manifest.json">
+<title>Banco Gratidão V13 ULTIMATE - José Marcos Lacerda</title>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
+<style>
+:root{--gold:#FFD700;--gold2:#FFC700;--bg:#070708;--card:#111;--line:#222}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
+body{background:radial-gradient(1200px 600px at 20% -10%,#1a1a0a,var(--bg));color:#fff;min-height:100vh;padding-bottom:80px}
+.top{position:sticky;top:0;z-index:99;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);border-bottom:2px solid var(--gold);padding:10px;display:flex;gap:6px;overflow:auto}
+.pill{white-space:nowrap;padding:10px 14px;border-radius:30px;border:2px solid #444;background:#1a1a1a;color:#fff;font-weight:800}
+.pill.on{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#000;border-color:var(--gold)}
+.wrap{max-width:700px;margin:0 auto;padding:12px}
+.card{margin:10px 0;border:2px solid var(--gold);border-radius:18px;padding:14px;background:linear-gradient(180deg,#1a1a1a,#111)}
+.hGold{color:var(--gold);font-weight:900}
+.btnY{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:30px;padding:14px 20px;font-weight:900;width:100%}
+.btnLine{border:2px solid var(--gold);background:#111;color:var(--gold);border-radius:30px;padding:10px 14px;font-weight:800}
+.input{width:100%;background:#000;border:2px solid #333;border-radius:12px;padding:12px;color:#fff;margin:6px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.item{display:flex;justify-content:space-between;align-items:center;background:#111;border:2px solid #222;border-radius:16px;padding:12px;margin:6px 0}
+.screen{display:none}.screen.show{display:block}
+.music-player{width:100%;height:200px;border-radius:16px;border:2px solid var(--gold);background:#000}
+.ia-box{background:linear-gradient(90deg,var(--gold),var(--gold2));color:#000;padding:12px;border-radius:14px;font-weight:800;margin:8px 0}
+</style>
+</head>
+<body>
+<div class="top">
+<button class="pill on" onclick="tab('g',this)">✨ Gratidão</button>
+<button class="pill" onclick="tab('m',this)">🎵 Sonora</button>
+<button class="pill" onclick="tab('b',this)">💰 Banco</button>
+<button class="pill" onclick="tab('f',this)">📸 Fotos</button>
+<button class="pill" onclick="tab('ia',this)">🤖 IA 90%</button>
+</div>
+<div class="wrap">
+<div id="s-g" class="screen show">
+<div class="card">
+<h2 class="hGold">💛 Banco Gratidão V13 ULTIMATE</h2>
+<div class="ia-box">🤖 IA Super Inteligente 90% - José Marcos Lacerda</div>
+<textarea id="grat" class="input" rows="3" placeholder="Escreva 3 motivos de gratidão hoje..."></textarea>
+<button class="btnY" onclick="addGrat()">✨ Salvar Gratidão + IA</button>
+<div id="listG"></div>
+</div>
+<div class="card">
+<h3 class="hGold">Afirmação do Dia</h3>
+<p id="afirm" style="margin:10px 0;font-size:18px">Eu sou grato por tudo que tenho, tudo que sou e tudo que está chegando!</p>
+<button class="btnLine" onclick="novaAfirm()">🔄 Nova Afirmação IA</button>
+</div>
+</div>
+<div id="s-m" class="screen">
+<div class="card">
+<h3 class="hGold">🎵 Sonora - Músicas de Gratidão</h3>
+<input id="musNome" class="input" placeholder="Nome da música">
+<input id="musLink" class="input" placeholder="Link YouTube">
+<button class="btnY" onclick="addMusica()">+ 🎵 Add Música</button>
+<div id="listM" style="margin-top:12px"></div>
+<div id="playerBox" style="margin-top:12px;display:none">
+<iframe id="player" class="music-player" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+</div>
+<div id="s-b" class="screen">
+<div class="card">
+<h3 class="hGold">💰 Banco de Prosperidade</h3>
+<div class="grid2">
+<div class="card" style="margin:0;text-align:center"><h2 id="totalG">0</h2><small>Gratidões</small></div>
+<div class="card" style="margin:0;text-align:center"><h2 id="totalM">0</h2><small>Músicas</small></div>
+</div>
+<br>
+<input id="metaValor" class="input" type="number" placeholder="Meta R$">
+<button class="btnY" onclick="salvarMeta()">💎 Salvar Meta</button>
+<p id="metaTxt" style="margin-top:10px;color:var(--gold)"></p>
+</div>
+</div>
+<div id="s-f" class="screen">
+<div class="card">
+<h3 class="hGold">📸 Fotos de Gratidão</h3>
+<input type="file" id="fotoIn" accept="image/*" class="input">
+<button class="btnY" onclick="addFoto()">📸 Salvar Foto</button>
+<div id="listF" class="grid2" style="margin-top:10px"></div>
+</div>
+</div>
+<div id="s-ia" class="screen">
+<div class="card">
+<h3 class="hGold">🤖 IA Gratidão 90%</h3>
+<div class="ia-box" id="iaAnalise">Você está com 90% de energia positiva! Continue 3 gratidões por dia.</div>
+<button class="btnY" onclick="analisarIA()">🧠 Analisar Minha Energia</button>
+</div>
+</div>
+</div>
+<script>
+let dados=JSON.parse(localStorage.getItem('bgV13')||'{"g":[],"m":[],"f":[],"meta":0}');
+function save(){localStorage.setItem('bgV13',JSON.stringify(dados));renderAll();}
+function tab(t,el){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));document.getElementById('s-'+t).classList.add('show');document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');}
+function addGrat(){let v=document.getElementById('grat').value.trim();if(!v)return alert('Escreva algo!');dados.g.unshift({txt:v,dt:new Date().toLocaleString()});document.getElementById('grat').value='';save();}
+function renderG(){let h='';dados.g.forEach((x,i)=>{h+=`<div class="item"><div><b>${x.txt}</b><br><small>${x.dt}</small></div><button onclick="delG(${i})" style="background:#1a1a1a;border:none;width:38px;height:38px;border-radius:50%;color:#fff">✕</button></div>`;});document.getElementById('listG').innerHTML=h;document.getElementById('totalG').textContent=dados.g.length;}
+function delG(i){dados.g.splice(i,1);save();}
+const afirmacoes=["Eu sou grato por tudo que tenho, tudo que sou e tudo que está chegando!","O universo conspira a meu favor todos os dias!","Minha gratidão abre portas para milagres!","Eu atraio prosperidade com meu coração grato!","Hoje é um dia abençoado e cheio de oportunidades!"];
+function novaAfirm(){document.getElementById('afirm').textContent=afirmacoes[Math.floor(Math.random()*afirmacoes.length)];}
+function addMusica(){let n=document.getElementById('musNome').value.trim();let l=document.getElementById('musLink').value.trim();if(!n||!l)return alert('Preencha nome e link!');let id=l.includes('v=')?l.split('v=')[1].split('&')[0]:l.split('/').pop();dados.m.unshift({n,l,id});document.getElementById('musNome').value='';document.getElementById('musLink').value='';save();}
+function renderM(){let h='';dados.m.forEach((x,i)=>{h+=`<div class="item"><div><b>🎵 ${x.n}</b></div><div style="display:flex;gap:6px"><button class="btnLine" onclick="playM('${x.id}')">▶️</button><button onclick="delM(${i})" style="background:#1a1a1a;border:none;width:38px;height:38px;border-radius:50%;color:#fff">✕</button></div></div>`;});document.getElementById('listM').innerHTML=h;document.getElementById('totalM').textContent=dados.m.length;}
+function playM(id){document.getElementById('playerBox').style.display='block';document.getElementById('player').src='https://www.youtube.com/embed/'+id;window.scrollTo(0,400);}
+function delM(i){dados.m.splice(i,1);save();}
+function salvarMeta(){let v=document.getElementById('metaValor').value;dados.meta=v;save();document.getElementById('metaTxt').textContent='Meta salva: R$ '+v;}
+function renderMeta(){if(dados.meta)document.getElementById('metaTxt').textContent='Meta atual: R$ '+dados.meta;}
+function addFoto(){let inp=document.getElementById('fotoIn');if(!inp.files[0])return alert('Escolha foto!');let r=new FileReader();r.onload=e=>{dados.f.unshift(e.target.result);save();};r.readAsDataURL(inp.files[0]);}
+function renderF(){let h='';dados.f.forEach((src,i)=>{h+=`<div class="card" style="margin:0;padding:6px"><img src="${src}" style="width:100%;border-radius:12px"><button onclick="delF(${i})" style="margin-top:6px" class="btnLine">Excluir</button></div>`;});document.getElementById('listF').innerHTML=h;}
+function delF(i){dados.f.splice(i,1);save();}
+function analisarIA(){let msgs=["90% de energia positiva!","Seu padrão é de prosperidade!","Continue grato, milagres vindo!","IA detectou: coração em alta vibração!"];document.getElementById('iaAnalise').textContent=msgs[Math.floor(Math.random()*msgs.length)];}
+function renderAll(){renderG();renderM();renderF();renderMeta();}
+renderAll();
+</script>
+</body>
+</html>
